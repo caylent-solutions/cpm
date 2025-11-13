@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    This sets up the git connection and baselines
+-->
+<manifest>
+  <remote name="caylent-devops-platform" fetch="${GITBASE}"/>
+  <!-- <default remote="caylent-devops-platform" revision="update" /> -->
+</manifest>
