@@ -3,7 +3,7 @@
 # Environment variables override these defaults.
 
 REPO_MANIFESTS_URL ?= https://github.com/caylent-solutions/cpm.git
-REPO_MANIFESTS_REVISION ?= refs/tags/0.1.4
+REPO_MANIFESTS_REVISION ?= refs/tags/0.1.5
 REPO_MANIFESTS_PATH ?= <YOUR_MANIFEST_PATH>
 
 REPO_URL ?= https://github.com/caylent-solutions/git-repo.git
@@ -15,5 +15,5 @@ ASDF_DIR ?= $(HOME)/.asdf
 TOOL_VERSIONS_FILE ?= .tool-versions
 DEFAULT_PYTHON_VERSION ?= 3.12.9
 
-PACKAGES_DIR ?= packages
-MODULE_DIR ?= packages/modules
+PACKAGES_DIR ?= .packages
+MODULE_DIR ?= .packages/modules

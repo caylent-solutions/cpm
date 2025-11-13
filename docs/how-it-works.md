@@ -80,7 +80,7 @@ configure: install-asdf install-tools install-repo
 
 **Variables loaded from `.cpmenv`:**
 - `REPO_MANIFESTS_URL` → `https://github.com/caylent-solutions/cpm.git`
-- `REPO_MANIFESTS_REVISION` → `refs/tags/0.1.4`
+- `REPO_MANIFESTS_REVISION` → `refs/tags/0.1.5`
 - `REPO_MANIFESTS_PATH` → `manifests/terraform/caylent-terraform-modules-monorepo/modules/meta.xml`
 
 **Configure steps:**
@@ -106,7 +106,7 @@ The `repo init` command is executed with the `--repo-rev` flag:
 ```bash
 repo init --no-repo-verify \
   -u "https://github.com/caylent-solutions/cpm.git" \
-  -b "refs/tags/0.1.4" \
+  -b "refs/tags/0.1.5" \
   -m "manifests/terraform/caylent-terraform-modules-monorepo/modules/meta.xml" \
   --repo-rev="caylent-1.0.0"
 ```
@@ -124,7 +124,7 @@ The repo tool clones the CPM manifest repository:
 ```bash
 git clone https://github.com/caylent-solutions/cpm.git .repo/manifests
 cd .repo/manifests
-git checkout refs/tags/0.1.4
+git checkout refs/tags/0.1.5
 ```
 
 **Result:**
@@ -185,21 +185,21 @@ Loads: `.repo/manifests/manifests/terraform/caylent-terraform-modules-monorepo/m
 ```xml
 <manifest>
   <project name="cpm-terraform-modules-monorepo"
-           path="packages/modules"
+           path=".packages/modules"
            remote="caylent-devops-platform"
-           revision="refs/tags/0.1.4">
-    <linkfile src="modules/linkfiles/Makefile" dest="packages/Makefile" />
+           revision="refs/tags/0.1.5">
+    <linkfile src="modules/linkfiles/Makefile" dest=".packages/Makefile" />
   </project>
 </manifest>
 ```
 
 **Processing:**
 - Project name: `cpm-terraform-modules-monorepo`
-- Clone to: `packages/modules/`
+- Clone to: `.packages/modules/`
 - Remote: `caylent-devops-platform` → `https://github.com/caylent-solutions/`
 - Full URL: `https://github.com/caylent-solutions/cpm-terraform-modules-monorepo`
-- Revision: `refs/tags/0.1.4`
-- Linkfile: `modules/linkfiles/Makefile` → `packages/Makefile`
+- Revision: `refs/tags/0.1.5`
+- Linkfile: `modules/linkfiles/Makefile` → `.packages/Makefile`
 
 ---
 
@@ -208,9 +208,9 @@ Loads: `.repo/manifests/manifests/terraform/caylent-terraform-modules-monorepo/m
 ### 5.1: Clone Package Repository
 
 ```bash
-git clone https://github.com/caylent-solutions/cpm-terraform-modules-monorepo packages/modules
-cd packages/modules
-git checkout refs/tags/0.1.4
+git clone https://github.com/caylent-solutions/cpm-terraform-modules-monorepo .packages/modules
+cd .packages/modules
+git checkout refs/tags/0.1.5
 ```
 
 **Result:**
@@ -218,7 +218,7 @@ git checkout refs/tags/0.1.4
 my-project/
 ├── .git/
 ├── .repo/
-├── packages/
+├── .packages/
 │   └── modules/  (cpm-terraform-modules-monorepo cloned here)
 │       ├── modules/
 │       │   ├── linkfiles/
@@ -234,17 +234,17 @@ my-project/
 
 **Linkfile definition:**
 ```xml
-<linkfile src="modules/linkfiles/Makefile" dest="packages/Makefile" />
+<linkfile src="modules/linkfiles/Makefile" dest=".packages/Makefile" />
 ```
 
 **Processing:**
-- Source: `packages/modules/modules/linkfiles/Makefile` (relative to workspace root)
-- Destination: `packages/Makefile` (relative to workspace root)
+- Source: `.packages/modules/modules/linkfiles/Makefile` (relative to workspace root)
+- Destination: `.packages/Makefile` (relative to workspace root)
 - Action: Create symlink
 
 **Command executed:**
 ```bash
-ln -s modules/modules/linkfiles/Makefile packages/Makefile
+ln -s modules/modules/linkfiles/Makefile .packages/Makefile
 ```
 
 **Result:**
@@ -252,7 +252,7 @@ ln -s modules/modules/linkfiles/Makefile packages/Makefile
 my-project/
 ├── .git/
 ├── .repo/
-├── packages/
+├── .packages/
 │   ├── Makefile@ → modules/modules/linkfiles/Makefile  (SYMLINK CREATED)
 │   └── modules/
 │       └── modules/
@@ -281,18 +281,18 @@ make test
 **File:** `./Makefile`
 
 ```makefile
-PACKAGES_DIR = packages
+PACKAGES_DIR = .packages
 -include $(PACKAGES_DIR)/Makefile
 ```
 
 **Processing:**
-- Sets `PACKAGES_DIR = packages`
-- Includes `packages/Makefile`
-- This is a symlink: `packages/Makefile` → `packages/modules/modules/linkfiles/Makefile`
+- Sets `PACKAGES_DIR = .packages`
+- Includes `.packages/Makefile`
+- This is a symlink: `.packages/Makefile` → `.packages/modules/modules/linkfiles/Makefile`
 
 ### 6.2: Linkfiles Makefile Execution
 
-**File:** `packages/modules/modules/linkfiles/Makefile`
+**File:** `.packages/modules/modules/linkfiles/Makefile`
 
 ```makefile
 # CPM Terraform Modules - Makefile Wrapper
@@ -301,13 +301,13 @@ include $(PACKAGES_DIR)/modules/tasks/Makefile
 
 **Processing:**
 - `$(PACKAGES_DIR)` = `packages` (inherited from root Makefile)
-- Expands to: `include packages/modules/tasks/Makefile`
+- Expands to: `include .packages/modules/tasks/Makefile`
 - Working directory: `my-project/` (root)
-- Resolves to: `my-project/packages/modules/modules/tasks/Makefile`
+- Resolves to: `my-project/.packages/modules/modules/tasks/Makefile`
 
 ### 6.3: Tasks Makefile Execution
 
-**File:** `packages/modules/modules/tasks/Makefile`
+**File:** `.packages/modules/modules/tasks/Makefile`
 
 ```makefile
 .PHONY: test
@@ -335,7 +335,7 @@ my-project/
 │   ├── repo/                # Repo tool (second installation)
 │   ├── manifest.xml         # Resolved manifest
 │   └── ...
-├── packages/
+├── .packages/
 │   ├── Makefile@            # Symlink → modules/modules/linkfiles/Makefile
 │   └── modules/             # cpm-terraform-modules-monorepo repo
 │       └── modules/
@@ -356,17 +356,17 @@ my-project/
 User runs: make test
     ↓
 1. Root Makefile (./Makefile)
-   - Sets: PACKAGES_DIR = packages
-   - Includes: packages/Makefile
+   - Sets: PACKAGES_DIR = .packages
+   - Includes: .packages/Makefile
     ↓
 2. Symlink Resolution
-   - packages/Makefile → packages/modules/modules/linkfiles/Makefile
+   - .packages/Makefile → .packages/modules/modules/linkfiles/Makefile
     ↓
-3. Linkfiles Makefile (packages/modules/modules/linkfiles/Makefile)
+3. Linkfiles Makefile (.packages/modules/modules/linkfiles/Makefile)
    - Includes: $(PACKAGES_DIR)/modules/tasks/Makefile
-   - Expands to: packages/modules/modules/tasks/Makefile
+   - Expands to: .packages/modules/modules/tasks/Makefile
     ↓
-4. Tasks Makefile (packages/modules/modules/tasks/Makefile)
+4. Tasks Makefile (.packages/modules/modules/tasks/Makefile)
    - Executes: test target
    - Runs: tftest, go clean, etc.
 ```
@@ -390,7 +390,7 @@ The `${GITBASE}` is replaced with the value from the environment (set in `.cpmen
 Linkfiles create symlinks from the cloned repository to the workspace:
 
 ```xml
-<linkfile src="modules/linkfiles/Makefile" dest="packages/Makefile" />
+<linkfile src="modules/linkfiles/Makefile" dest=".packages/Makefile" />
 ```
 
 - `src` is relative to the cloned project path
@@ -431,7 +431,7 @@ Make variables from `.cpmenv` are inherited by included Makefiles:
 
 ```bash
 # .cpmenv
-PACKAGES_DIR = packages
+PACKAGES_DIR = .packages
 ```
 
 ```makefile

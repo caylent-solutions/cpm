@@ -40,7 +40,9 @@ REPO_MANIFESTS_PATH ?= manifests/terraform/caylent-terraform-modules-monorepo/mo
 make configure
 ```
 
-This automatically installs asdf, Python, and the repo tool.
+This automatically installs asdf, Python, and the repo tool. It also adds `.packages/` and `.repo/` to `.gitignore`.
+
+**Important:** All synced files in `.packages/` and `.repo/` are ephemeral and should not be committed. Only commit `Makefile` and `.cpmenv` to your repository.
 
 ### 4. Use
 
@@ -116,7 +118,7 @@ CPM uses the Caylent fork of the Gerrit `repo` tool to orchestrate dependencies 
 
 ## Version
 
-Current version: `0.1.4`
+Current version: `0.1.5`
 
 ---
 
