@@ -30,8 +30,8 @@ git init --initial-branch=main
 Copy the example files from the CPM repository:
 
 ```bash
-cp /path/to/cpm/example/Makefile .
-cp /path/to/cpm/example/.cpmenv .
+git checkout https://github.com/caylent-solutions/cpm.git example/Makefile
+git checkout https://github.com/caylent-solutions/cpm.git example/.cpmenv
 ```
 
 ---
@@ -62,7 +62,7 @@ Your `.cpmenv` should look like:
 # All variables are set here. Modify as needed for your project.
 
 REPO_MANIFESTS_URL = https://github.com/caylent-solutions/cpm.git
-REPO_MANIFESTS_REVISION = refs/tags/0.1.0
+REPO_MANIFESTS_REVISION = refs/tags/0.1.2
 REPO_MANIFESTS_PATH = manifests/terraform/caylent-terraform-modules-monorepo/modules/meta.xml
 
 REPO_URL = https://github.com/caylent-solutions/git-repo.git
@@ -92,7 +92,7 @@ Review `.cpmenv` to ensure all settings are correct for your project. The file c
 
 ---
 
-## Step 4: Run Configure
+## Step 5: Run Configure
 
 Initialize and sync CPM packages:
 
@@ -112,7 +112,7 @@ This will:
 
 ---
 
-## Step 5: Verify Setup
+## Step 6: Verify Setup
 
 Check that packages were synced:
 
@@ -131,19 +131,15 @@ make help
 
 ---
 
-## Step 6: Use CPM Targets
+## Step 7: Use CPM Targets
 
-Now you can use all the targets provided by your chosen manifest.
-
-### Terraform Module Example
+Run `make help` to see all available targets from your chosen manifest:
 
 ```bash
-make install      # Install dependencies
-make test         # Run tests
-make tf-lint      # Lint Terraform
-make tf-format    # Format Terraform
-make tf-docs      # Generate documentation
+make help
 ```
+
+Each manifest provides different automation tasks specific to its purpose. For example, the Terraform modules manifest provides targets like `test`, `tf-lint`, `tf-format`, and `tf-docs`.
 
 ---
 

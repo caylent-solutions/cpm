@@ -22,11 +22,19 @@ CPM provides **version-controlled, reproducible automation** for your projects t
 ### 1. Setup
 
 ```bash
-cp /path/to/cpm/example/Makefile .
-cp /path/to/cpm/example/.cpmenv .
+git checkout https://github.com/caylent-solutions/cpm.git example/Makefile
+git checkout https://github.com/caylent-solutions/cpm.git example/.cpmenv
 ```
 
-### 2. Configure
+### 2. Set Manifest Path
+
+Edit `.cpmenv` and set `REPO_MANIFESTS_PATH` to your desired manifest:
+
+```bash
+REPO_MANIFESTS_PATH ?= manifests/terraform/caylent-terraform-modules-monorepo/modules/meta.xml
+```
+
+### 3. Configure
 
 ```bash
 make configure
@@ -34,13 +42,9 @@ make configure
 
 This automatically installs asdf, Python, and the repo tool.
 
-### 3. Use
+### 4. Use
 
-```bash
-make test
-make tf-lint
-make tf-format
-```
+Run `make help` to see available targets from your chosen manifest. Each manifest provides different automation tasks specific to its purpose.
 
 **[Full Setup Guide →](docs/setup-guide.md)**
 
@@ -55,7 +59,7 @@ make tf-format
 
 ## How It Works
 
-CPM uses the Gerrit `repo` tool to orchestrate dependencies across Git repositories. Manifests define what to clone, where to place it, and how to wire it together. Works with any task runner - Make, npm, Gradle, Maven, or custom scripts.
+CPM uses the Caylent fork of the Gerrit `repo` tool to orchestrate dependencies across Git repositories. Manifests define what to clone, where to place it, and how to wire it together. Works with any task runner - Make, npm, Gradle, Maven, or custom scripts.
 
 **[Complete Technical Walkthrough →](docs/how-it-works.md)**
 
@@ -112,7 +116,7 @@ CPM uses the Gerrit `repo` tool to orchestrate dependencies across Git repositor
 
 ## Version
 
-Current version: `0.1.0`
+Current version: `0.1.2`
 
 ---
 

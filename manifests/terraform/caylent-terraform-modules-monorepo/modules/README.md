@@ -4,7 +4,7 @@ This manifest provides shared tooling for Terraform modules in the [Caylent terr
 
 ## Purpose
 
-Provides standardized Make targets for individual Terraform module subdirectories within the terraform-modules monorepo, eliminating code duplication across 100+ modules.
+Provides standardized Make targets for individual Terraform module subdirectories within the terraform-modules monorepo, eliminating code duplication across all modules.
 
 ## Target Repository
 

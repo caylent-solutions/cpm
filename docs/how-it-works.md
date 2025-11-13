@@ -8,7 +8,7 @@ Complete walkthrough of CPM's internal process from project creation to running 
 
 ## Overview
 
-CPM uses the Gerrit `repo` tool to orchestrate dependency management across multiple Git repositories. This document explains every step of the process.
+CPM uses the Caylent fork of the Gerrit `repo` tool to orchestrate dependency management across multiple Git repositories. This document explains every step of the process.
 
 ---
 
@@ -35,8 +35,8 @@ my-project/
 User copies the CPM example Makefile:
 
 ```bash
-cp /path/to/cpm/example/Makefile .
-cp /path/to/cpm/example/.cpmenv .
+git checkout https://github.com/caylent-solutions/cpm.git example/Makefile
+git checkout https://github.com/caylent-solutions/cpm.git example/.cpmenv
 ```
 
 **Result:**
@@ -80,7 +80,7 @@ configure: install-asdf install-tools install-repo
 
 **Variables loaded from `.cpmenv`:**
 - `REPO_MANIFESTS_URL` → `https://github.com/caylent-solutions/cpm.git`
-- `REPO_MANIFESTS_REVISION` → `refs/tags/0.1.0`
+- `REPO_MANIFESTS_REVISION` → `refs/tags/0.1.2`
 - `REPO_MANIFESTS_PATH` → `manifests/terraform/caylent-terraform-modules-monorepo/modules/meta.xml`
 
 **Configure steps:**
@@ -101,7 +101,7 @@ The repo tool clones the CPM manifest repository:
 ```bash
 git clone https://github.com/caylent-solutions/cpm.git .repo/manifests
 cd .repo/manifests
-git checkout refs/tags/0.1.0
+git checkout refs/tags/0.1.2
 ```
 
 **Result:**
@@ -164,7 +164,7 @@ Loads: `.repo/manifests/manifests/terraform/caylent-terraform-modules-monorepo/m
   <project name="cpm-terraform-modules-monorepo"
            path="packages/modules"
            remote="caylent-devops-platform"
-           revision="refs/tags/0.1.0">
+           revision="refs/tags/0.1.2">
     <linkfile src="modules/linkfiles/Makefile" dest="packages/Makefile" />
   </project>
 </manifest>
@@ -175,7 +175,7 @@ Loads: `.repo/manifests/manifests/terraform/caylent-terraform-modules-monorepo/m
 - Clone to: `packages/modules/`
 - Remote: `caylent-devops-platform` → `https://github.com/caylent-solutions/`
 - Full URL: `https://github.com/caylent-solutions/cpm-terraform-modules-monorepo`
-- Revision: `refs/tags/0.1.0`
+- Revision: `refs/tags/0.1.2`
 - Linkfile: `modules/linkfiles/Makefile` → `packages/Makefile`
 
 ---
@@ -187,7 +187,7 @@ Loads: `.repo/manifests/manifests/terraform/caylent-terraform-modules-monorepo/m
 ```bash
 git clone https://github.com/caylent-solutions/cpm-terraform-modules-monorepo packages/modules
 cd packages/modules
-git checkout refs/tags/0.1.0
+git checkout refs/tags/0.1.2
 ```
 
 **Result:**
