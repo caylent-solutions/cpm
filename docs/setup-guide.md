@@ -11,7 +11,12 @@ Complete guide for setting up CPM in your project.
 None! The `make configure` command will automatically install:
 - asdf v0.15.0 (if not already installed)
 - Python 3.12.9 (via asdf)
-- Caylent repo tool (latest version)
+- Caylent repo tool (version specified by `REPO_REV` in `.cpmenv`)
+
+**Tip:** Find the latest Caylent repo tool version:
+```bash
+curl -s https://api.github.com/repos/caylent-solutions/git-repo/tags | jq -r '.[0].name'
+```
 
 ---
 
@@ -49,9 +54,10 @@ REPO_MANIFESTS_PATH = manifests/terraform/caylent-terraform-modules-monorepo/mod
 
 **Future manifests:**
 - Python: `manifests/python/meta.xml` (coming soon)
+- TypeScript: `manifests/typescript/meta.xml` (coming soon)
+- Go: `manifests/go/meta.xml` (coming soon)
+- Rego: `manifests/rego/meta.xml` (coming soon)
 - .NET: `manifests/dotnet/meta.xml` (coming soon)
-- Java: `manifests/java/meta.xml` (coming soon)
-- CDK: `manifests/cdk/meta.xml` (coming soon)
 
 ### Example: Terraform Module
 
@@ -62,7 +68,7 @@ Your `.cpmenv` should look like:
 # All variables are set here. Modify as needed for your project.
 
 REPO_MANIFESTS_URL = https://github.com/caylent-solutions/cpm.git
-REPO_MANIFESTS_REVISION = refs/tags/0.1.3
+REPO_MANIFESTS_REVISION = refs/tags/0.1.4
 REPO_MANIFESTS_PATH = manifests/terraform/caylent-terraform-modules-monorepo/modules/meta.xml
 
 REPO_URL = https://github.com/caylent-solutions/git-repo.git
@@ -104,11 +110,16 @@ This will:
 1. Install asdf v0.15.0 (if not already installed)
 2. Create `.tool-versions` file with Python 3.12.9 (if not exists)
 3. Install all tools from `.tool-versions` via asdf
-4. Install the latest Caylent repo tool
+4. Install Caylent repo tool (version specified by `REPO_REV` in `.cpmenv`)
 5. Initialize the repo tool with your chosen manifest
 6. Clone package repositories to `packages/`
 7. Create symlinks for shared tooling
 8. Make all package targets available
+
+**Note:** To find the latest Caylent repo tool version:
+```bash
+curl -s https://api.github.com/repos/caylent-solutions/git-repo/tags | jq -r '.[0].name'
+```
 
 ---
 
@@ -118,28 +129,41 @@ Check that packages were synced:
 
 ```bash
 ls -la packages/
-# Should show: Makefile@ -> modules/linkfiles/Makefile
-# Should show: modules/ directory
+# Should show synced package directories and any linkfiles
 ```
 
-Test a make target:
+Verify available automation (if using Make-based manifest):
 
 ```bash
 make help
-# Should show available targets from the package
 ```
+
+**Note:** Different manifests provide different artifacts - some provide make targets, others provide npm scripts, configuration files, or code assets. Check your manifest's README for specifics.
 
 ---
 
-## Step 7: Use CPM Targets
+## Step 7: Use CPM Packages
 
-Run `make help` to see all available targets from your chosen manifest:
+Each manifest provides different artifacts specific to its purpose:
 
+**Make-based manifests** (e.g., Terraform modules):
 ```bash
-make help
+make help  # See available targets
+make test  # Run tests
 ```
 
-Each manifest provides different automation tasks specific to its purpose. For example, the Terraform modules manifest provides targets like `test`, `tf-lint`, `tf-format`, and `tf-docs`.
+**npm-based manifests:**
+```bash
+npm run  # See available scripts
+```
+
+**Configuration/asset manifests:**
+- Lint configurations (`.eslintrc`, `tflint.hcl`)
+- Shared code libraries
+- CI/CD templates
+- Security policies
+
+Refer to your manifest's README for specific usage instructions.
 
 ---
 

@@ -44,7 +44,7 @@ This automatically installs asdf, Python, and the repo tool.
 
 ### 4. Use
 
-Run `make help` to see available targets from your chosen manifest. Each manifest provides automation tasks, dependencies, and configurations specific to its purpose - including linting, testing, security scanning, and deployment automation.
+Each manifest provides different artifacts - automation tasks, dependencies, configurations, or code assets. For Make-based manifests, run `make help` to see available targets. For other manifests, refer to the manifest's README for usage instructions.
 
 **[Full Setup Guide →](docs/setup-guide.md)**
 
@@ -116,7 +116,7 @@ CPM uses the Caylent fork of the Gerrit `repo` tool to orchestrate dependencies 
 
 ## Version
 
-Current version: `0.1.3`
+Current version: `0.1.4`
 
 ---
 

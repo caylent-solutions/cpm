@@ -80,19 +80,42 @@ configure: install-asdf install-tools install-repo
 
 **Variables loaded from `.cpmenv`:**
 - `REPO_MANIFESTS_URL` → `https://github.com/caylent-solutions/cpm.git`
-- `REPO_MANIFESTS_REVISION` → `refs/tags/0.1.3`
+- `REPO_MANIFESTS_REVISION` → `refs/tags/0.1.4`
 - `REPO_MANIFESTS_PATH` → `manifests/terraform/caylent-terraform-modules-monorepo/modules/meta.xml`
 
 **Configure steps:**
 1. Install asdf v0.15.0 (if not already installed)
 2. Install tools from `.tool-versions` via asdf
-3. Install Caylent repo tool (version from `REPO_REV`)
-4. Run `repo init` with manifest configuration
-5. Run `repo sync` to clone packages
+3. Install Caylent repo tool launcher via pip (version from `REPO_REV`)
+4. Run `repo init` with manifest configuration and `--repo-rev` flag
+5. Repo launcher clones full repo implementation into `.repo/repo/` (version from `REPO_REV`)
+6. Run `repo sync` to clone packages
+
+**Note:** The repo tool uses a two-stage architecture:
+- **Launcher** (step 3): Lightweight bootstrap script installed via pip
+- **Full Implementation** (step 5): Complete repo tool cloned into `.repo/repo/` by the launcher
+
+This is the standard repo tool design - the launcher delegates to the full implementation in `.repo/repo/`. Both use the same `REPO_REV` version.
 
 ---
 
 ## Step 4: `repo init` Executes
+
+The `repo init` command is executed with the `--repo-rev` flag:
+
+```bash
+repo init --no-repo-verify \
+  -u "https://github.com/caylent-solutions/cpm.git" \
+  -b "refs/tags/0.1.4" \
+  -m "manifests/terraform/caylent-terraform-modules-monorepo/modules/meta.xml" \
+  --repo-rev="caylent-1.0.0"
+```
+
+**What `--repo-rev` does:**
+- Clones the repo tool itself into `.repo/repo/` at the specified version
+- This is the **second installation** of the repo tool (first was via pip)
+- Future `repo` commands will use this `.repo/repo/` version
+- Ensures the repo tool version matches `REPO_REV` from `.cpmenv`
 
 ### 4.1: Clone CPM Manifest Repository
 
@@ -101,7 +124,7 @@ The repo tool clones the CPM manifest repository:
 ```bash
 git clone https://github.com/caylent-solutions/cpm.git .repo/manifests
 cd .repo/manifests
-git checkout refs/tags/0.1.3
+git checkout refs/tags/0.1.4
 ```
 
 **Result:**
@@ -164,7 +187,7 @@ Loads: `.repo/manifests/manifests/terraform/caylent-terraform-modules-monorepo/m
   <project name="cpm-terraform-modules-monorepo"
            path="packages/modules"
            remote="caylent-devops-platform"
-           revision="refs/tags/0.1.3">
+           revision="refs/tags/0.1.4">
     <linkfile src="modules/linkfiles/Makefile" dest="packages/Makefile" />
   </project>
 </manifest>
@@ -175,7 +198,7 @@ Loads: `.repo/manifests/manifests/terraform/caylent-terraform-modules-monorepo/m
 - Clone to: `packages/modules/`
 - Remote: `caylent-devops-platform` → `https://github.com/caylent-solutions/`
 - Full URL: `https://github.com/caylent-solutions/cpm-terraform-modules-monorepo`
-- Revision: `refs/tags/0.1.3`
+- Revision: `refs/tags/0.1.4`
 - Linkfile: `modules/linkfiles/Makefile` → `packages/Makefile`
 
 ---
@@ -187,7 +210,7 @@ Loads: `.repo/manifests/manifests/terraform/caylent-terraform-modules-monorepo/m
 ```bash
 git clone https://github.com/caylent-solutions/cpm-terraform-modules-monorepo packages/modules
 cd packages/modules
-git checkout refs/tags/0.1.3
+git checkout refs/tags/0.1.4
 ```
 
 **Result:**
@@ -309,6 +332,7 @@ my-project/
 ├── .git/
 ├── .repo/
 │   ├── manifests/           # CPM manifest repo
+│   ├── repo/                # Repo tool (second installation)
 │   ├── manifest.xml         # Resolved manifest
 │   └── ...
 ├── packages/
@@ -371,6 +395,35 @@ Linkfiles create symlinks from the cloned repository to the workspace:
 
 - `src` is relative to the cloned project path
 - `dest` is relative to workspace root
+
+### Dual Repo Tool Installation
+
+The repo tool uses a two-stage architecture by design:
+
+**First Installation (via pip) - Launcher:**
+```bash
+pip install "git+https://github.com/caylent-solutions/git-repo.git@caylent-1.0.0"
+```
+- Installs a lightweight launcher script
+- Provides the initial `repo` command
+- Version controlled by `REPO_REV` in `.cpmenv`
+
+**Second Installation (via repo init) - Full Implementation:**
+```bash
+repo init --repo-rev="caylent-1.0.0" ...
+```
+- Clones the full repo tool implementation into `.repo/repo/`
+- Contains all repo subcommands and logic
+- Used for all subsequent `repo` operations (sync, status, etc.)
+- Version controlled by `--repo-rev` flag (same as `REPO_REV`)
+
+**How it works:**
+This is the standard repo tool architecture. The launcher script (first installation) is a minimal bootstrap that delegates to the full implementation (second installation) in `.repo/repo/`. This allows:
+- The repo tool to update itself per-project
+- Different projects to use different repo versions
+- The repo tool version to be tracked in the project's `.repo/` directory
+
+Both installations use the same `REPO_REV` version to ensure the launcher and implementation match.
 
 ### Variable Inheritance
 
