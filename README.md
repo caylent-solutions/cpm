@@ -44,7 +44,7 @@ This automatically installs asdf, Python, and the repo tool.
 
 ### 4. Use
 
-Run `make help` to see available targets from your chosen manifest. Each manifest provides different automation tasks specific to its purpose.
+Run `make help` to see available targets from your chosen manifest. Each manifest provides automation tasks, dependencies, and configurations specific to its purpose - including linting, testing, security scanning, and deployment automation.
 
 **[Full Setup Guide →](docs/setup-guide.md)**
 
