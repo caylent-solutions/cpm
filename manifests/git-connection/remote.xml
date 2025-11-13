@@ -3,6 +3,6 @@
     This sets up the git connection and baselines
 -->
 <manifest>
-  <remote name="caylent-devops-platform" fetch="${GITBASE}"/>
-  <!-- <default remote="caylent-devops-platform" revision="update" /> -->
+  <remote name="caylent-solutions" fetch="https://github.com/caylent-solutions/"/>
+  <remote name="caylent" fetch="https://github.com/caylent/"/>
 </manifest>

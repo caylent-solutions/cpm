@@ -1,0 +1,4 @@
+# Environment files
+shell.env
+devcontainer-environment-variables.json
+.devcontainer/aws-profile-map.json

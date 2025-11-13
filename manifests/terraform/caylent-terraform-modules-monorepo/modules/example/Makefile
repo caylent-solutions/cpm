@@ -1,6 +1,6 @@
 CPM_ENV_FILE = .cpmenv
 ifeq (,$(wildcard $(CPM_ENV_FILE)))
-$(error Error: $(CPM_ENV_FILE) not found. Copy from cpm/example/.cpmenv)
+$(error Error: $(CPM_ENV_FILE) not found. Copy from manifests/terraform/caylent-terraform-modules-monorepo/modules/example/.cpmenv)
 endif
 include $(CPM_ENV_FILE)
 
@@ -21,7 +21,7 @@ REQUIRED_VARS := \
 $(foreach var,$(REQUIRED_VARS),$(if $($(var)),,$(error Error: $(var) not set in $(CPM_ENV_FILE))))
 
 # Export variables for repo tool
-export REPO_URL REPO_REV
+export REPO_URL REPO_REV GITBASE
 
 # Include project level defaults (env vars, etc.)
 -include Makefile.includes

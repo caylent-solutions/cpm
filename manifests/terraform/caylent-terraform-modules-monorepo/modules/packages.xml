@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    This manifest defines Terraform module dependencies and tooling components
+-->
+<manifest>
+  <project name="cpm-terraform-modules-monorepo" path="packages/modules" remote="caylent-solutions" revision="refs/tags/1.0.0">
+    <linkfile src="modules/linkfiles/Makefile" dest="packages/Makefile" />
+  </project>
+
+</manifest>

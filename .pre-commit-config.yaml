@@ -1,0 +1,26 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        name: Remove trailing whitespace
+      - id: end-of-file-fixer
+        name: Fix end of files
+      - id: check-yaml
+        name: Check YAML syntax
+      - id: check-added-large-files
+        name: Check for large files
+        args: ['--maxkb=500']
+      - id: check-merge-conflict
+        name: Check for merge conflicts
+      - id: mixed-line-ending
+        name: Fix mixed line endings
+        args: ['--fix=lf']
+  - repo: local
+    hooks:
+      - id: validate-xml
+        name: Validate XML files
+        entry: make validate-xml
+        language: system
+        files: \.xml$
+        pass_filenames: false
