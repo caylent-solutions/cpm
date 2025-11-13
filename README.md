@@ -118,7 +118,7 @@ Current version: `0.1.0`
 
 ## License
 
-Proprietary - Caylent Solutions
+Apache 2.0
 
 ---
 
