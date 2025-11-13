@@ -118,7 +118,7 @@ CPM uses the Caylent fork of the Gerrit `repo` tool to orchestrate dependencies 
 
 ## Version
 
-Current version: `0.1.5`
+Current version: `0.1.6`
 
 ---
 

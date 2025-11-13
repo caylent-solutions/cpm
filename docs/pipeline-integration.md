@@ -41,7 +41,6 @@ jobs:
     env:
       REPO_MANIFESTS_REVISION: refs/tags/2.0.0
       REPO_REV: caylent-2.0.0
-      ASDF_DIR: /tmp/.asdf
     steps:
       - uses: actions/checkout@v4
       - run: make configure
@@ -54,7 +53,6 @@ jobs:
 variables:
   REPO_MANIFESTS_REVISION: refs/tags/2.0.0
   REPO_REV: caylent-2.0.0
-  ASDF_DIR: /tmp/.asdf
 
 build:
   script:
@@ -70,7 +68,6 @@ pipeline {
     environment {
         REPO_MANIFESTS_REVISION = 'refs/tags/2.0.0'
         REPO_REV = 'caylent-2.0.0'
-        ASDF_DIR = '/tmp/.asdf'
     }
     stages {
         stage('Build') {
@@ -101,8 +98,7 @@ export REPO_REV=caylent-2.0.0
 Use pipeline-specific directories:
 
 ```bash
-export ASDF_DIR=/tmp/.asdf
-export PACKAGES_DIR=/tmp/packages
+export PACKAGES_DIR=/tmp/.packages
 ```
 
 ### Git Configuration
@@ -122,10 +118,9 @@ All variables in `.cpmenv` can be overridden. Key variables for pipelines:
 
 | Variable | Purpose | Example |
 |----------|---------|---------|
-| `REPO_MANIFESTS_REVISION` | CPM version/branch | `refs/tags/0.1.5` |
+| `REPO_MANIFESTS_REVISION` | CPM version/branch | `refs/tags/0.1.6` |
 | `REPO_REV` | repo tool version | `caylent-1.0.0` |
-| `ASDF_DIR` | asdf installation path | `/tmp/.asdf` |
-| `PACKAGES_DIR` | Package sync location | `packages` |
+| `PACKAGES_DIR` | Package sync location | `.packages` |
 
 ---
 
@@ -149,8 +144,8 @@ If a variable is missing from both sources, the build fails with a clear error.
 Commit `.cpmenv` with sensible defaults for developers:
 
 ```makefile
-REPO_MANIFESTS_REVISION ?= refs/tags/0.1.5
-ASDF_DIR ?= $(HOME)/.asdf
+REPO_MANIFESTS_REVISION ?= refs/tags/0.1.6
+PACKAGES_DIR ?= .packages
 ```
 
 ### 2. Override in Pipeline
@@ -160,7 +155,6 @@ Set only what needs to change:
 ```yaml
 env:
   REPO_MANIFESTS_REVISION: refs/tags/2.0.0  # Use newer version
-  ASDF_DIR: /tmp/.asdf                       # Pipeline-specific path
 ```
 
 ### 3. Document Pipeline Variables
@@ -169,8 +163,7 @@ Add comments to `.cpmenv` indicating which variables pipelines typically overrid
 
 ```makefile
 # Commonly overridden in pipelines
-REPO_MANIFESTS_REVISION ?= refs/tags/0.1.5
-ASDF_DIR ?= $(HOME)/.asdf
+REPO_MANIFESTS_REVISION ?= refs/tags/0.1.6
 ```
 
 ### 4. Test Locally
@@ -213,8 +206,7 @@ REPO_REV ?= caylent-1.0.0
 **Solution:** Use pipeline-writable paths:
 
 ```bash
-export ASDF_DIR=/tmp/.asdf
-export PACKAGES_DIR=/tmp/packages
+export PACKAGES_DIR=/tmp/.packages
 ```
 
 ---
@@ -232,14 +224,14 @@ REPO_REV ?= caylent-1.0.0
 
 ```yaml
 env:
-  REPO_MANIFESTS_REVISION: refs/tags/0.1.5-rc1
+  REPO_MANIFESTS_REVISION: refs/tags/0.1.6-rc1
 ```
 
 ### Production Pipeline
 
 ```yaml
 env:
-  REPO_MANIFESTS_REVISION: refs/tags/0.1.5
+  REPO_MANIFESTS_REVISION: refs/tags/0.1.6
 ```
 
 Same `.cpmenv` file, different behavior per environment.
