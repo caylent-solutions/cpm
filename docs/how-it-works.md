@@ -80,7 +80,7 @@ configure: install-asdf install-tools install-repo
 
 **Variables loaded from `.cpmenv`:**
 - `REPO_MANIFESTS_URL` → `https://github.com/caylent-solutions/cpm.git`
-- `REPO_MANIFESTS_REVISION` → `refs/tags/0.1.7`
+- `REPO_MANIFESTS_REVISION` → `refs/tags/0.1.8`
 - `REPO_MANIFESTS_PATH` → `manifests/terraform/caylent-terraform-modules-monorepo/modules/meta.xml`
 
 **Configure steps:**
@@ -106,7 +106,7 @@ The `repo init` command is executed with the `--repo-rev` flag:
 ```bash
 repo init --no-repo-verify \
   -u "https://github.com/caylent-solutions/cpm.git" \
-  -b "refs/tags/0.1.7" \
+  -b "refs/tags/0.1.8" \
   -m "manifests/terraform/caylent-terraform-modules-monorepo/modules/meta.xml" \
   --repo-rev="caylent-1.0.0"
 ```
@@ -124,7 +124,7 @@ The repo tool clones the CPM manifest repository:
 ```bash
 git clone https://github.com/caylent-solutions/cpm.git .repo/manifests
 cd .repo/manifests
-git checkout refs/tags/0.1.7
+git checkout refs/tags/0.1.8
 ```
 
 **Result:**
@@ -187,7 +187,7 @@ Loads: `.repo/manifests/manifests/terraform/caylent-terraform-modules-monorepo/m
   <project name="cpm-terraform-modules-monorepo"
            path=".packages/modules"
            remote="caylent-devops-platform"
-           revision="refs/tags/0.1.7">
+           revision="refs/tags/0.1.8">
     <linkfile src="modules/linkfiles/Makefile" dest=".packages/Makefile" />
   </project>
 </manifest>
@@ -198,7 +198,7 @@ Loads: `.repo/manifests/manifests/terraform/caylent-terraform-modules-monorepo/m
 - Clone to: `.packages/modules/`
 - Remote: `caylent-devops-platform` → `https://github.com/caylent-solutions/`
 - Full URL: `https://github.com/caylent-solutions/cpm-terraform-modules-monorepo`
-- Revision: `refs/tags/0.1.7`
+- Revision: `refs/tags/0.1.8`
 - Linkfile: `modules/linkfiles/Makefile` → `.packages/Makefile`
 
 ---
@@ -210,7 +210,7 @@ Loads: `.repo/manifests/manifests/terraform/caylent-terraform-modules-monorepo/m
 ```bash
 git clone https://github.com/caylent-solutions/cpm-terraform-modules-monorepo .packages/modules
 cd .packages/modules
-git checkout refs/tags/0.1.7
+git checkout refs/tags/0.1.8
 ```
 
 **Result:**

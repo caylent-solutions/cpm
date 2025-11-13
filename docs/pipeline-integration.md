@@ -118,7 +118,7 @@ All variables in `.cpmenv` can be overridden. Key variables for pipelines:
 
 | Variable | Purpose | Example |
 |----------|---------|---------|
-| `REPO_MANIFESTS_REVISION` | CPM version/branch | `refs/tags/0.1.7` |
+| `REPO_MANIFESTS_REVISION` | CPM version/branch | `refs/tags/0.1.8` |
 | `REPO_REV` | repo tool version | `caylent-1.0.0` |
 | `PACKAGES_DIR` | Package sync location | `.packages` |
 
@@ -144,7 +144,7 @@ If a variable is missing from both sources, the build fails with a clear error.
 Commit `.cpmenv` with sensible defaults for developers:
 
 ```makefile
-REPO_MANIFESTS_REVISION ?= refs/tags/0.1.7
+REPO_MANIFESTS_REVISION ?= refs/tags/0.1.8
 PACKAGES_DIR ?= .packages
 ```
 
@@ -163,7 +163,7 @@ Add comments to `.cpmenv` indicating which variables pipelines typically overrid
 
 ```makefile
 # Commonly overridden in pipelines
-REPO_MANIFESTS_REVISION ?= refs/tags/0.1.7
+REPO_MANIFESTS_REVISION ?= refs/tags/0.1.8
 ```
 
 ### 4. Test Locally
@@ -224,14 +224,14 @@ REPO_REV ?= caylent-1.0.0
 
 ```yaml
 env:
-  REPO_MANIFESTS_REVISION: refs/tags/0.1.7-rc1
+  REPO_MANIFESTS_REVISION: refs/tags/0.1.8-rc1
 ```
 
 ### Production Pipeline
 
 ```yaml
 env:
-  REPO_MANIFESTS_REVISION: refs/tags/0.1.7
+  REPO_MANIFESTS_REVISION: refs/tags/0.1.8
 ```
 
 Same `.cpmenv` file, different behavior per environment.

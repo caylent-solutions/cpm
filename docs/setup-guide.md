@@ -68,7 +68,7 @@ Your `.cpmenv` should look like:
 # All variables are set here. Modify as needed for your project.
 
 REPO_MANIFESTS_URL = https://github.com/caylent-solutions/cpm.git
-REPO_MANIFESTS_REVISION = refs/tags/0.1.7
+REPO_MANIFESTS_REVISION = refs/tags/0.1.8
 REPO_MANIFESTS_PATH = manifests/terraform/caylent-terraform-modules-monorepo/modules/meta.xml
 
 REPO_URL = https://github.com/caylent-solutions/git-repo.git

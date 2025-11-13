@@ -38,7 +38,7 @@ Projects specify which remote to use:
 <project name="cpm-terraform-modules-monorepo"
          path=".packages/modules"
          remote="caylent-solutions"
-         revision="refs/tags/0.1.7"/>
+         revision="refs/tags/0.1.8"/>
 ```
 
 ## Adding Custom Remotes
