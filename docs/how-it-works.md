@@ -35,8 +35,8 @@ my-project/
 User copies the CPM example Makefile:
 
 ```bash
-git checkout https://github.com/caylent-solutions/cpm.git example/Makefile
-git checkout https://github.com/caylent-solutions/cpm.git example/.cpmenv
+curl -o Makefile https://raw.githubusercontent.com/caylent-solutions/cpm/main/example/Makefile
+curl -o .cpmenv https://raw.githubusercontent.com/caylent-solutions/cpm/main/example/.cpmenv
 ```
 
 **Result:**

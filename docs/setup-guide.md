@@ -35,8 +35,8 @@ git init --initial-branch=main
 Copy the example files from the CPM repository:
 
 ```bash
-git checkout https://github.com/caylent-solutions/cpm.git example/Makefile
-git checkout https://github.com/caylent-solutions/cpm.git example/.cpmenv
+curl -o Makefile https://raw.githubusercontent.com/caylent-solutions/cpm/main/example/Makefile
+curl -o .cpmenv https://raw.githubusercontent.com/caylent-solutions/cpm/main/example/.cpmenv
 ```
 
 ---

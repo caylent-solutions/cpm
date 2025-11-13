@@ -22,8 +22,8 @@ CPM provides **version-controlled, reproducible automation** for your projects t
 ### 1. Setup
 
 ```bash
-git checkout https://github.com/caylent-solutions/cpm.git example/Makefile
-git checkout https://github.com/caylent-solutions/cpm.git example/.cpmenv
+curl -o Makefile https://raw.githubusercontent.com/caylent-solutions/cpm/main/example/Makefile
+curl -o .cpmenv https://raw.githubusercontent.com/caylent-solutions/cpm/main/example/.cpmenv
 ```
 
 ### 2. Set Manifest Path
