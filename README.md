@@ -6,7 +6,7 @@ Centralized platform and development automation for any organization.
 
 ---
 
-## What is CPM?
+## What is Caylent Package Manager?
 
 CPM is an **open-source DevOps Platform Dependency Manager** that brings version-controlled, reproducible automation to your projects through declarative manifests. Designed for managing platform automation and dependencies, CPM's flexible architecture makes it an ideal overlay for any team wanting to dynamically pull in versioned chunks of automation, capabilities, and repeatable standards—without replacing your existing tools.
 
