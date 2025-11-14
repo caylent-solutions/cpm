@@ -3,7 +3,7 @@
 # Environment variables override these defaults.
 
 REPO_MANIFESTS_URL ?= https://github.com/caylent-solutions/cpm.git
-REPO_MANIFESTS_REVISION ?= refs/tags/0.1.10
+REPO_MANIFESTS_REVISION ?= refs/tags/0.1.11
 REPO_MANIFESTS_PATH ?= repo-specs/terraform/caylent-terraform-modules-monorepo/modules/meta.xml
 
 REPO_URL ?= https://github.com/caylent-solutions/git-repo.git
@@ -17,7 +17,7 @@ JOB_EMAIL ?= job@job.job
 
 ASDF_URL ?= https://github.com/asdf-vm/asdf.git
 ASDF_VERSION ?= v0.15.0
-ASDF_DIR ?= $(HOME)/.asdf
+ASDF_DIR ?= $$HOME/.asdf
 TOOL_VERSIONS_FILE ?= .tool-versions
 DEFAULT_PYTHON_VERSION ?= 3.12.9
 

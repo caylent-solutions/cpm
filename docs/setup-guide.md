@@ -32,32 +32,41 @@ git init --initial-branch=main
 
 ## Step 2: Copy CPM Files
 
-Copy the example files from the CPM repository:
+Copy the task runner files from your chosen manifest's `example/` directory.
 
+**For Terraform Modules:**
 ```bash
-curl -o Makefile https://raw.githubusercontent.com/caylent-solutions/cpm/main/examples/example-make-task-runner/Makefile
-curl -o .cpmenv https://raw.githubusercontent.com/caylent-solutions/cpm/main/examples/example-make-task-runner/.cpmenv
+curl -o Makefile https://raw.githubusercontent.com/caylent-solutions/cpm/main/repo-specs/terraform/caylent-terraform-modules-monorepo/modules/example/Makefile
+curl -o .cpmenv https://raw.githubusercontent.com/caylent-solutions/cpm/main/repo-specs/terraform/caylent-terraform-modules-monorepo/modules/example/.cpmenv
 ```
+
+**For other ecosystems:** Replace the path with your manifest's example directory.
 
 ---
 
-## Step 3: Configure the Manifest
+## Step 3: Verify Configuration
 
-Edit `.cpmenv` to point to your desired manifest. All configuration is in this file - you never need to edit the Makefile.
+The `.cpmenv` file from the manifest's example directory is pre-configured with the correct `REPO_MANIFESTS_PATH`. Verify it:
+
+```bash
+cat .cpmenv | grep REPO_MANIFESTS_PATH
+```
+
+**Terraform Modules example:**
+```bash
+REPO_MANIFESTS_PATH ?= repo-specs/terraform/caylent-terraform-modules-monorepo/modules/meta.xml
+```
 
 ### Available Manifests
 
-**Terraform Modules (for terraform-modules monorepo subdirectories):**
-```bash
-REPO_MANIFESTS_PATH = repo-specs/terraform/caylent-terraform-modules-monorepo/modules/meta.xml
-```
+- **Terraform Modules:** `repo-specs/terraform/caylent-terraform-modules-monorepo/modules/`
+- **Python:** `repo-specs/python/` (coming soon)
+- **TypeScript:** `repo-specs/typescript/` (coming soon)
+- **Go:** `repo-specs/go/` (coming soon)
+- **Rego:** `repo-specs/rego/` (coming soon)
+- **.NET:** `repo-specs/dotnet/` (coming soon)
 
-**Future manifests:**
-- Python: `repo-specs/python/meta.xml` (coming soon)
-- TypeScript: `repo-specs/typescript/meta.xml` (coming soon)
-- Go: `repo-specs/go/meta.xml` (coming soon)
-- Rego: `repo-specs/rego/meta.xml` (coming soon)
-- .NET: `repo-specs/dotnet/meta.xml` (coming soon)
+All configuration is in `.cpmenv` - you never need to edit the Makefile.
 
 ### Example: Terraform Module
 
@@ -68,7 +77,7 @@ Your `.cpmenv` should look like:
 # All variables are set here. Modify as needed for your project.
 
 REPO_MANIFESTS_URL = https://github.com/caylent-solutions/cpm.git
-REPO_MANIFESTS_REVISION = refs/tags/0.1.10
+REPO_MANIFESTS_REVISION = refs/tags/0.1.11
 REPO_MANIFESTS_PATH = repo-specs/terraform/caylent-terraform-modules-monorepo/modules/meta.xml
 
 REPO_URL = https://github.com/caylent-solutions/git-repo.git

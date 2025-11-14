@@ -3,6 +3,6 @@
     This manifest defines Terraform module dependencies and tooling components
 -->
 <manifest>
-  <project name="cpm-terraform-modules-monorepo" path=".packages/cpm-terraform-modules-monorepo" remote="caylent-solutions" revision="refs/tags/0.2.0" />
+  <project name="cpm-terraform-modules-monorepo" path=".packages/cpm-terraform-modules-monorepo" remote="caylent-solutions" revision="refs/tags/0.2.1" />
 
 </manifest>

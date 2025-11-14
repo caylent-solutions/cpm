@@ -40,7 +40,7 @@ help: ## Show available make targets
 
 .PHONY: cpm-clean
 cpm-clean:
-	@. $(ASDF_DIR)/asdf.sh && \
+	@ASDF_DIR=$(ASDF_DIR) && . $$ASDF_DIR/asdf.sh && \
 	repo list | awk '{ print $$1; }' | cut -d '/' -f1 | uniq | xargs rm -rf; \
 	find . -type l ! -exec test -e {} \; -print | xargs rm -rf
 
@@ -54,7 +54,7 @@ cpm-configure: cpm-install-asdf cpm-install-tools cpm-install-repo
 		echo "Adding .repo/ to .gitignore..."; \
 		echo ".repo/" >> .gitignore; \
 	fi
-	@. $(ASDF_DIR)/asdf.sh && \
+	@ASDF_DIR=$(ASDF_DIR) && . $$ASDF_DIR/asdf.sh && \
 	if ! which repo > /dev/null 2>&1; then \
 		echo "Error: repo tool not found after installation"; \
 		exit 1; \
@@ -92,7 +92,7 @@ cpm-install-repo:
 		echo "Error: REPO_REV not set"; \
 		exit 1; \
 	fi
-	@. $(ASDF_DIR)/asdf.sh && \
+	@ASDF_DIR=$(ASDF_DIR) && . $$ASDF_DIR/asdf.sh && \
 	echo "Installing repo tool version $(REPO_REV)..." && \
 	pip install "git+$(REPO_URL)@$(REPO_REV)" || { echo "Error: Failed to install repo tool"; exit 1; } && \
 	asdf reshim python && \
@@ -108,7 +108,7 @@ cpm-install-tools:
 		echo "Error: $(TOOL_VERSIONS_FILE) not found. Run 'make cpm-install-asdf' first."; \
 		exit 1; \
 	fi
-	@. $(ASDF_DIR)/asdf.sh && \
+	@ASDF_DIR=$(ASDF_DIR) && . $$ASDF_DIR/asdf.sh && \
 	awk '{print $$1}' $(TOOL_VERSIONS_FILE) | sort -u | while read plugin; do \
 		if ! asdf plugin list | grep -q "^$$plugin$$"; then \
 			echo "Installing asdf plugin: $$plugin"; \

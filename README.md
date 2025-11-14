@@ -20,17 +20,22 @@ CPM provides **version-controlled, reproducible automation** for your projects t
 
 ### 1. Setup
 
+Copy the task runner files from your chosen manifest's `example/` directory.
+
+**For Terraform Modules:**
 ```bash
-curl -o Makefile https://raw.githubusercontent.com/caylent-solutions/cpm/main/examples/example-make-task-runner/Makefile
-curl -o .cpmenv https://raw.githubusercontent.com/caylent-solutions/cpm/main/examples/example-make-task-runner/.cpmenv
+curl -o Makefile https://raw.githubusercontent.com/caylent-solutions/cpm/main/repo-specs/terraform/caylent-terraform-modules-monorepo/modules/example/Makefile
+curl -o .cpmenv https://raw.githubusercontent.com/caylent-solutions/cpm/main/repo-specs/terraform/caylent-terraform-modules-monorepo/modules/example/.cpmenv
 ```
 
-### 2. Set Manifest Path
+The `.cpmenv` file is pre-configured with the correct manifest path for that ecosystem.
 
-Edit `.cpmenv` and set `REPO_MANIFESTS_PATH` to your desired manifest:
+### 2. Verify Configuration
+
+Check that `.cpmenv` has the correct `REPO_MANIFESTS_PATH` for your manifest:
 
 ```bash
-REPO_MANIFESTS_PATH ?= repo-specs/terraform/caylent-terraform-modules-monorepo/modules/meta.xml
+cat .cpmenv | grep REPO_MANIFESTS_PATH
 ```
 
 ### 3. Configure
@@ -73,6 +78,7 @@ CPM uses the Caylent fork of the Gerrit `repo` tool to orchestrate dependencies 
 - **[Setup Guide](docs/setup-guide.md)** - Step-by-step setup instructions
 - **[How It Works](docs/how-it-works.md)** - Complete technical walkthrough
 - **[Pipeline Integration](docs/pipeline-integration.md)** - CI/CD pipeline configuration
+- **[Contributing](docs/contributing.md)** - Create manifests and package repositories
 - **[Git Connection Manifest](repo-specs/git-connection/README.md)** - Remote definitions
 - **[Terraform Modules Manifest](repo-specs/terraform/caylent-terraform-modules-monorepo/modules/README.md)** - Terraform tooling
 
@@ -119,7 +125,7 @@ CPM uses the Caylent fork of the Gerrit `repo` tool to orchestrate dependencies 
 
 ## Version
 
-Current version: `0.1.10`
+Current version: `0.1.11`
 
 ---
 

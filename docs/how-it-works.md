@@ -78,7 +78,7 @@ cpm-configure: cpm-install-asdf cpm-install-tools cpm-install-repo
 
 **Variables loaded from `.cpmenv`:**
 - `REPO_MANIFESTS_URL` → `https://github.com/caylent-solutions/cpm.git`
-- `REPO_MANIFESTS_REVISION` → `refs/tags/0.2.00`
+- `REPO_MANIFESTS_REVISION` → `refs/tags/0.2.10`
 - `REPO_MANIFESTS_PATH` → `repo-specs/terraform/caylent-terraform-modules-monorepo/modules/meta.xml`
 - `PACKAGES_DIR` → `.packages`
 
@@ -105,7 +105,7 @@ The `repo init` command is executed with the `--repo-rev` flag:
 ```bash
 repo init --no-repo-verify \
   -u "https://github.com/caylent-solutions/cpm.git" \
-  -b "refs/tags/0.2.00" \
+  -b "refs/tags/0.2.10" \
   -m "repo-specs/terraform/caylent-terraform-modules-monorepo/modules/meta.xml" \
   --repo-rev="caylent-1.0.0"
 ```
@@ -123,7 +123,7 @@ The repo tool clones the CPM manifest repository:
 ```bash
 git clone https://github.com/caylent-solutions/cpm.git .repo/manifests
 cd .repo/manifests
-git checkout refs/tags/0.2.00
+git checkout refs/tags/0.2.10
 ```
 
 **Result:**
@@ -191,7 +191,7 @@ Loads: `.repo/manifests/repo-specs/terraform/caylent-terraform-modules-monorepo/
   <project name="cpm-terraform-modules-monorepo"
            path=".packages/cpm-terraform-modules-monorepo"
            remote="caylent-devops-platform"
-           revision="refs/tags/0.2.0" />
+           revision="refs/tags/0.2.1" />
 </manifest>
 ```
 
@@ -200,7 +200,7 @@ Loads: `.repo/manifests/repo-specs/terraform/caylent-terraform-modules-monorepo/
 - Clone to: `.packages/cpm-terraform-modules-monorepo/`
 - Remote: `caylent-devops-platform` → `https://github.com/caylent-solutions/`
 - Full URL: `https://github.com/caylent-solutions/cpm-terraform-modules-monorepo`
-- Revision: `refs/tags/0.2.0`
+- Revision: `refs/tags/0.2.1`
 
 ---
 
@@ -211,7 +211,7 @@ Loads: `.repo/manifests/repo-specs/terraform/caylent-terraform-modules-monorepo/
 ```bash
 git clone https://github.com/caylent-solutions/cpm-terraform-modules-monorepo .packages/cpm-terraform-modules-monorepo
 cd .packages/cpm-terraform-modules-monorepo
-git checkout refs/tags/0.2.0
+git checkout refs/tags/0.2.1
 ```
 
 **Result:**
