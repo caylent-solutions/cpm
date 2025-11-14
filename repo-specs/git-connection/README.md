@@ -27,7 +27,7 @@ All CPM manifests include this remote definition:
 
 ```xml
 <manifest>
-  <include name="manifests/git-connection/remote.xml" />
+  <include name="repo-specs/git-connection/remote.xml" />
   <!-- ... project definitions ... -->
 </manifest>
 ```
@@ -36,9 +36,9 @@ Projects specify which remote to use:
 
 ```xml
 <project name="cpm-terraform-modules-monorepo"
-         path=".packages/modules"
+         path=".packages/cpm-terraform-modules-monorepo"
          remote="caylent-solutions"
-         revision="refs/tags/0.1.8"/>
+         revision="refs/tags/0.2.0"/>
 ```
 
 ## Adding Custom Remotes

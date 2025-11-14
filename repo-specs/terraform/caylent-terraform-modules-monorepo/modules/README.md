@@ -35,15 +35,35 @@ terraform-modules/
 
 **Note:** This only provides tooling for individual module subdirectories. The monorepo root Makefile remains in the terraform-modules repository and is not managed by CPM.
 
+## Package Repository Structure
+
+The `cpm-terraform-modules-monorepo` package repository must have its Makefile at the root:
+
+```
+cpm-terraform-modules-monorepo/
+├── Makefile          # MUST be at root for glob pattern to find it
+├── common.mk         # Optional: shared variables/functions
+├── README.md
+└── ...
+```
+
+**Why:** The root Makefile uses `-include $(PACKAGES_DIR)/*/Makefile` which expects each package's Makefile at `.packages/<package-name>/Makefile`. Nested Makefiles will not be automatically included.
+
+**Shared Includes:** You can add `common.mk` or other `.mk` files at the package root for shared variables and functions. Include them in your Makefile with:
+
+```makefile
+include $(dir $(lastword $(MAKEFILE_LIST)))common.mk
+```
+
 ## Usage
 
 Module developers add the CPM Makefile to their module subdirectory:
 
 ```bash
 cd providers/aws/primitives/s3
-# Copy CPM Makefile from cpm/example/Makefile
-make configure  # Syncs CPM packages
-make test       # Uses CPM targets
+# Copy CPM Makefile from cpm/examples/example-make-task-runner/Makefile
+make cpm-configure  # Syncs CPM packages
+make test           # Uses package-provided targets
 ```
 
 ## Manifest Path
@@ -51,7 +71,7 @@ make test       # Uses CPM targets
 Use this manifest in your module's Makefile:
 
 ```makefile
-REPO_MANIFESTS_PATH ?= manifests/terraform/caylent-terraform-modules-monorepo/meta.xml
+REPO_MANIFESTS_PATH ?= repo-specs/terraform/caylent-terraform-modules-monorepo/modules/meta.xml
 ```
 
 ## Files
@@ -63,8 +83,8 @@ REPO_MANIFESTS_PATH ?= manifests/terraform/caylent-terraform-modules-monorepo/me
 ## Related Manifests
 
 This is one of many CPM manifests for different development categories:
-- `manifests/terraform/caylent-terraform-modules-monorepo/modules/` - This manifest (module subdirectories)
-- `manifests/python/` - Python projects (future)
-- `manifests/dotnet/` - .NET projects (future)
-- `manifests/java/` - Java projects (future)
-- `manifests/cdk/` - AWS CDK projects (future)
+- `repo-specs/terraform/caylent-terraform-modules-monorepo/modules/` - This manifest (module subdirectories)
+- `repo-specs/python/` - Python projects (future)
+- `repo-specs/dotnet/` - .NET projects (future)
+- `repo-specs/java/` - Java projects (future)
+- `repo-specs/cdk/` - AWS CDK projects (future)

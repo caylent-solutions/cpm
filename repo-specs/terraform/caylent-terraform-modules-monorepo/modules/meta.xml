@@ -3,6 +3,6 @@
     Meta manifest for Terraform modules - includes git connection and package definitions
 -->
 <manifest>
-  <include name="manifests/git-connection/remote.xml" />
-  <include name="manifests/terraform/caylent-terraform-modules-monorepo/modules/packages.xml" />
+  <include name="repo-specs/git-connection/remote.xml" />
+  <include name="repo-specs/terraform/caylent-terraform-modules-monorepo/modules/packages.xml" />
 </manifest>

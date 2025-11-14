@@ -1,6 +1,6 @@
 CPM_ENV_FILE = .cpmenv
 ifeq (,$(wildcard $(CPM_ENV_FILE)))
-$(error Error: $(CPM_ENV_FILE) not found. Copy from cpm/example/.cpmenv)
+$(error Error: $(CPM_ENV_FILE) not found. Run: curl -o .cpmenv https://raw.githubusercontent.com/caylent-solutions/cpm/main/examples/example-make-task-runner/.cpmenv)
 endif
 include $(CPM_ENV_FILE)
 
@@ -16,8 +16,7 @@ REQUIRED_VARS := \
 	ASDF_DIR \
 	TOOL_VERSIONS_FILE \
 	DEFAULT_PYTHON_VERSION \
-	PACKAGES_DIR \
-	MODULE_DIR
+	PACKAGES_DIR
 $(foreach var,$(REQUIRED_VARS),$(if $($(var)),,$(error Error: $(var) not set in $(CPM_ENV_FILE))))
 
 # Export variables for repo tool
@@ -26,8 +25,8 @@ export REPO_URL REPO_REV
 # Include project level defaults (env vars, etc.)
 -include Makefile.includes
 
-# Include packages Makefile after configuration is loaded
--include $(PACKAGES_DIR)/Makefile
+# Include all package Makefiles after configuration is loaded
+-include $(PACKAGES_DIR)/*/Makefile
 
 .DEFAULT_GOAL := help
 
@@ -39,14 +38,14 @@ help: ## Show available make targets
 		sort | uniq | \
 		grep -v -e '^[^[:alnum:]]' -e '^$@$$'
 
-.PHONY: clean
-clean:
+.PHONY: cpm-clean
+cpm-clean:
 	@. $(ASDF_DIR)/asdf.sh && \
 	repo list | awk '{ print $$1; }' | cut -d '/' -f1 | uniq | xargs rm -rf; \
 	find . -type l ! -exec test -e {} \; -print | xargs rm -rf
 
-.PHONY: configure
-configure: install-asdf install-tools install-repo
+.PHONY: cpm-configure
+cpm-configure: cpm-install-asdf cpm-install-tools cpm-install-repo
 	@if [ ! -f .gitignore ] || ! grep -q "^$(PACKAGES_DIR)/$$" .gitignore; then \
 		echo "Adding $(PACKAGES_DIR)/ to .gitignore..."; \
 		echo "$(PACKAGES_DIR)/" >> .gitignore; \
@@ -68,8 +67,8 @@ configure: install-asdf install-tools install-repo
 		--repo-rev="$(REPO_REV)" || { echo "Error: repo init failed"; exit 1; } && \
 	repo sync || { echo "Error: repo sync failed"; exit 1; }
 
-.PHONY: install-asdf
-install-asdf:
+.PHONY: cpm-install-asdf
+cpm-install-asdf:
 	@if [ -d "$(ASDF_DIR)" ]; then \
 		echo "asdf already installed at $(ASDF_DIR)"; \
 	else \
@@ -87,8 +86,8 @@ install-asdf:
 		fi; \
 	fi
 
-.PHONY: install-repo
-install-repo:
+.PHONY: cpm-install-repo
+cpm-install-repo:
 	@if [ -z "$(REPO_REV)" ]; then \
 		echo "Error: REPO_REV not set"; \
 		exit 1; \
@@ -99,14 +98,14 @@ install-repo:
 	asdf reshim python && \
 	echo "Repo tool installed successfully"
 
-.PHONY: install-tools
-install-tools:
+.PHONY: cpm-install-tools
+cpm-install-tools:
 	@if [ ! -d "$(ASDF_DIR)" ]; then \
-		echo "Error: asdf not installed. Run 'make install-asdf' first."; \
+		echo "Error: asdf not installed. Run 'make cpm-install-asdf' first."; \
 		exit 1; \
 	fi
 	@if [ ! -f "$(TOOL_VERSIONS_FILE)" ]; then \
-		echo "Error: $(TOOL_VERSIONS_FILE) not found. Run 'make install-asdf' first."; \
+		echo "Error: $(TOOL_VERSIONS_FILE) not found. Run 'make cpm-install-asdf' first."; \
 		exit 1; \
 	fi
 	@. $(ASDF_DIR)/asdf.sh && \

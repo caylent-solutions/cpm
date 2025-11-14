@@ -43,7 +43,7 @@ jobs:
       REPO_REV: caylent-2.0.0
     steps:
       - uses: actions/checkout@v4
-      - run: make configure
+      - run: make cpm-configure
       - run: make test
 ```
 
@@ -56,7 +56,7 @@ variables:
 
 build:
   script:
-    - make configure
+    - make cpm-configure
     - make test
 ```
 
@@ -72,7 +72,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'make configure'
+                sh 'make cpm-configure'
                 sh 'make test'
             }
         }
@@ -118,7 +118,7 @@ All variables in `.cpmenv` can be overridden. Key variables for pipelines:
 
 | Variable | Purpose | Example |
 |----------|---------|---------|
-| `REPO_MANIFESTS_REVISION` | CPM version/branch | `refs/tags/0.1.8` |
+| `REPO_MANIFESTS_REVISION` | CPM version/branch | `refs/tags/0.1.10` |
 | `REPO_REV` | repo tool version | `caylent-1.0.0` |
 | `PACKAGES_DIR` | Package sync location | `.packages` |
 
@@ -144,7 +144,7 @@ If a variable is missing from both sources, the build fails with a clear error.
 Commit `.cpmenv` with sensible defaults for developers:
 
 ```makefile
-REPO_MANIFESTS_REVISION ?= refs/tags/0.1.8
+REPO_MANIFESTS_REVISION ?= refs/tags/0.1.10
 PACKAGES_DIR ?= .packages
 ```
 
@@ -163,7 +163,7 @@ Add comments to `.cpmenv` indicating which variables pipelines typically overrid
 
 ```makefile
 # Commonly overridden in pipelines
-REPO_MANIFESTS_REVISION ?= refs/tags/0.1.8
+REPO_MANIFESTS_REVISION ?= refs/tags/0.1.10
 ```
 
 ### 4. Test Locally
@@ -172,7 +172,7 @@ Verify pipeline configuration locally:
 
 ```bash
 export REPO_MANIFESTS_REVISION=refs/tags/2.0.0
-make configure
+make cpm-configure
 ```
 
 ---
@@ -224,14 +224,14 @@ REPO_REV ?= caylent-1.0.0
 
 ```yaml
 env:
-  REPO_MANIFESTS_REVISION: refs/tags/0.1.8-rc1
+  REPO_MANIFESTS_REVISION: refs/tags/0.1.10-rc1
 ```
 
 ### Production Pipeline
 
 ```yaml
 env:
-  REPO_MANIFESTS_REVISION: refs/tags/0.1.8
+  REPO_MANIFESTS_REVISION: refs/tags/0.1.10
 ```
 
 Same `.cpmenv` file, different behavior per environment.

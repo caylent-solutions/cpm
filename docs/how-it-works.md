@@ -2,8 +2,6 @@
 
 Complete walkthrough of CPM's internal process from project creation to running automation tasks.
 
-**Note:** This guide uses Make as an example task runner, but CPM is tool-agnostic and works with npm, Gradle, Maven, or any automation tool. The orchestration process is identical regardless of the task runner.
-
 ---
 
 ## Overview
@@ -35,8 +33,8 @@ my-project/
 User copies the CPM example Makefile:
 
 ```bash
-curl -o Makefile https://raw.githubusercontent.com/caylent-solutions/cpm/main/example/Makefile
-curl -o .cpmenv https://raw.githubusercontent.com/caylent-solutions/cpm/main/example/.cpmenv
+curl -o Makefile https://raw.githubusercontent.com/caylent-solutions/cpm/main/examples/example-make-task-runner/Makefile
+curl -o .cpmenv https://raw.githubusercontent.com/caylent-solutions/cpm/main/examples/example-make-task-runner/.cpmenv
 ```
 
 **Result:**
@@ -62,31 +60,32 @@ my-project/
 
 ---
 
-## Step 3: User Runs `make configure`
+## Step 3: User Runs `make cpm-configure`
 
 ```bash
-make configure
+make cpm-configure
 ```
 
 ### 3.1: Makefile Execution
 
-The Makefile loads `.cpmenv`, validates all required variables are set, then executes the `configure` target:
+The Makefile loads `.cpmenv`, validates all required variables are set, then executes the `cpm-configure` target:
 
 ```makefile
-.PHONY: configure
-configure: install-asdf install-tools install-repo
+.PHONY: cpm-configure
+cpm-configure: cpm-install-asdf cpm-install-tools cpm-install-repo
 	# repo init and sync commands
 ```
 
 **Variables loaded from `.cpmenv`:**
 - `REPO_MANIFESTS_URL` → `https://github.com/caylent-solutions/cpm.git`
-- `REPO_MANIFESTS_REVISION` → `refs/tags/0.1.8`
-- `REPO_MANIFESTS_PATH` → `manifests/terraform/caylent-terraform-modules-monorepo/modules/meta.xml`
+- `REPO_MANIFESTS_REVISION` → `refs/tags/0.2.00`
+- `REPO_MANIFESTS_PATH` → `repo-specs/terraform/caylent-terraform-modules-monorepo/modules/meta.xml`
+- `PACKAGES_DIR` → `.packages`
 
 **Configure steps:**
-1. Install asdf v0.15.0 (if not already installed)
-2. Install tools from `.tool-versions` via asdf
-3. Install Caylent repo tool launcher via pip (version from `REPO_REV`)
+1. `cpm-install-asdf`: Install asdf v0.15.0 (if not already installed)
+2. `cpm-install-tools`: Install tools from `.tool-versions` via asdf
+3. `cpm-install-repo`: Install Caylent repo tool launcher via pip (version from `REPO_REV`)
 4. Run `repo init` with manifest configuration and `--repo-rev` flag
 5. Repo launcher clones full repo implementation into `.repo/repo/` (version from `REPO_REV`)
 6. Run `repo sync` to clone packages
@@ -106,8 +105,8 @@ The `repo init` command is executed with the `--repo-rev` flag:
 ```bash
 repo init --no-repo-verify \
   -u "https://github.com/caylent-solutions/cpm.git" \
-  -b "refs/tags/0.1.8" \
-  -m "manifests/terraform/caylent-terraform-modules-monorepo/modules/meta.xml" \
+  -b "refs/tags/0.2.00" \
+  -m "repo-specs/terraform/caylent-terraform-modules-monorepo/modules/meta.xml" \
   --repo-rev="caylent-1.0.0"
 ```
 
@@ -124,7 +123,7 @@ The repo tool clones the CPM manifest repository:
 ```bash
 git clone https://github.com/caylent-solutions/cpm.git .repo/manifests
 cd .repo/manifests
-git checkout refs/tags/0.1.8
+git checkout refs/tags/0.2.00
 ```
 
 **Result:**
@@ -132,8 +131,8 @@ git checkout refs/tags/0.1.8
 my-project/
 ├── .git/
 ├── .repo/
-│   └── manifests/  (CPM repo cloned here)
-│       ├── manifests/
+│   └── manifests/  (CPM repo cloned here - hardcoded by repo tool)
+│       ├── repo-specs/
 │       │   ├── git-connection/
 │       │   │   └── remote.xml
 │       │   └── terraform/
@@ -148,22 +147,27 @@ my-project/
 
 ### 4.2: Load Meta Manifest
 
-Repo tool loads: `.repo/manifests/manifests/terraform/caylent-terraform-modules-monorepo/modules/meta.xml`
+Repo tool loads: `.repo/manifests/repo-specs/terraform/caylent-terraform-modules-monorepo/modules/meta.xml`
 
 ```xml
 <manifest>
-  <include name="manifests/git-connection/remote.xml" />
-  <include name="manifests/terraform/caylent-terraform-modules-monorepo/modules/packages.xml" />
+  <include name="repo-specs/git-connection/remote.xml" />
+  <include name="repo-specs/terraform/caylent-terraform-modules-monorepo/modules/packages.xml" />
 </manifest>
 ```
 
 **Processing:**
-1. Includes `manifests/git-connection/remote.xml` (absolute from repo root)
-2. Includes `manifests/terraform/caylent-terraform-modules-monorepo/modules/packages.xml` (absolute from repo root)
+1. Includes `repo-specs/git-connection/remote.xml` (absolute from repo root)
+2. Includes `repo-specs/terraform/caylent-terraform-modules-monorepo/modules/packages.xml` (absolute from repo root)
+
+**Note:** The path `.repo/manifests/repo-specs/` may look redundant, but it's intentional:
+- `.repo/manifests/` is hardcoded by the repo tool (cannot be changed)
+- `repo-specs/` is our directory name inside the CPM repository
+- This naming eliminates the confusing double `manifests/manifests/` pattern
 
 ### 4.3: Load Remote Definition
 
-Loads: `.repo/manifests/manifests/git-connection/remote.xml`
+Loads: `.repo/manifests/repo-specs/git-connection/remote.xml`
 
 ```xml
 <manifest>
@@ -180,26 +184,23 @@ Loads: `.repo/manifests/manifests/git-connection/remote.xml`
 
 ### 4.4: Load Package Definitions
 
-Loads: `.repo/manifests/manifests/terraform/caylent-terraform-modules-monorepo/modules/packages.xml`
+Loads: `.repo/manifests/repo-specs/terraform/caylent-terraform-modules-monorepo/modules/packages.xml`
 
 ```xml
 <manifest>
   <project name="cpm-terraform-modules-monorepo"
-           path=".packages/modules"
+           path=".packages/cpm-terraform-modules-monorepo"
            remote="caylent-devops-platform"
-           revision="refs/tags/0.1.8">
-    <linkfile src="modules/linkfiles/Makefile" dest=".packages/Makefile" />
-  </project>
+           revision="refs/tags/0.2.0" />
 </manifest>
 ```
 
 **Processing:**
 - Project name: `cpm-terraform-modules-monorepo`
-- Clone to: `.packages/modules/`
+- Clone to: `.packages/cpm-terraform-modules-monorepo/`
 - Remote: `caylent-devops-platform` → `https://github.com/caylent-solutions/`
 - Full URL: `https://github.com/caylent-solutions/cpm-terraform-modules-monorepo`
-- Revision: `refs/tags/0.1.8`
-- Linkfile: `modules/linkfiles/Makefile` → `.packages/Makefile`
+- Revision: `refs/tags/0.2.0`
 
 ---
 
@@ -208,9 +209,9 @@ Loads: `.repo/manifests/manifests/terraform/caylent-terraform-modules-monorepo/m
 ### 5.1: Clone Package Repository
 
 ```bash
-git clone https://github.com/caylent-solutions/cpm-terraform-modules-monorepo .packages/modules
-cd .packages/modules
-git checkout refs/tags/0.1.8
+git clone https://github.com/caylent-solutions/cpm-terraform-modules-monorepo .packages/cpm-terraform-modules-monorepo
+cd .packages/cpm-terraform-modules-monorepo
+git checkout refs/tags/0.2.0
 ```
 
 **Result:**
@@ -219,47 +220,9 @@ my-project/
 ├── .git/
 ├── .repo/
 ├── .packages/
-│   └── modules/  (cpm-terraform-modules-monorepo cloned here)
-│       ├── modules/
-│       │   ├── linkfiles/
-│       │   │   └── Makefile
-│       │   └── tasks/
-│       │       └── Makefile
+│   └── cpm-terraform-modules-monorepo/  (cloned here)
+│       ├── Makefile
 │       └── README.md
-├── Makefile
-└── .cpmenv
-```
-
-### 5.2: Create Linkfile
-
-**Linkfile definition:**
-```xml
-<linkfile src="modules/linkfiles/Makefile" dest=".packages/Makefile" />
-```
-
-**Processing:**
-- Source: `.packages/modules/modules/linkfiles/Makefile` (relative to workspace root)
-- Destination: `.packages/Makefile` (relative to workspace root)
-- Action: Create symlink
-
-**Command executed:**
-```bash
-ln -s modules/modules/linkfiles/Makefile .packages/Makefile
-```
-
-**Result:**
-```
-my-project/
-├── .git/
-├── .repo/
-├── .packages/
-│   ├── Makefile@ → modules/modules/linkfiles/Makefile  (SYMLINK CREATED)
-│   └── modules/
-│       └── modules/
-│           ├── linkfiles/
-│           │   └── Makefile
-│           └── tasks/
-│               └── Makefile
 ├── Makefile
 └── .cpmenv
 ```
@@ -274,7 +237,7 @@ User runs an automation task (using Make in this example):
 make test
 ```
 
-**Note:** The same pattern works with npm (`npm run test`), Gradle (`gradle test`), or any task runner. CPM provides the packages; your task runner executes them.
+**Note:** While this example uses Make, CPM's orchestration pattern is designed to support any task runner (npm, Gradle, Maven, etc.). Future examples will demonstrate these integrations using the same `.packages/` cloning pattern.
 
 ### 6.1: Root Makefile Execution
 
@@ -282,32 +245,18 @@ make test
 
 ```makefile
 PACKAGES_DIR = .packages
--include $(PACKAGES_DIR)/Makefile
+-include $(PACKAGES_DIR)/*/Makefile
 ```
 
 **Processing:**
 - Sets `PACKAGES_DIR = .packages`
-- Includes `.packages/Makefile`
-- This is a symlink: `.packages/Makefile` → `.packages/modules/modules/linkfiles/Makefile`
+- Glob pattern includes all Makefiles: `.packages/*/Makefile`
+- Expands to: `.packages/cpm-terraform-modules-monorepo/Makefile`
+- Multiple packages would all be included automatically
 
-### 6.2: Linkfiles Makefile Execution
+### 6.2: Package Makefile Execution
 
-**File:** `.packages/modules/modules/linkfiles/Makefile`
-
-```makefile
-# CPM Terraform Modules - Makefile Wrapper
-include $(PACKAGES_DIR)/modules/tasks/Makefile
-```
-
-**Processing:**
-- `$(PACKAGES_DIR)` = `packages` (inherited from root Makefile)
-- Expands to: `include .packages/modules/tasks/Makefile`
-- Working directory: `my-project/` (root)
-- Resolves to: `my-project/.packages/modules/modules/tasks/Makefile`
-
-### 6.3: Tasks Makefile Execution
-
-**File:** `.packages/modules/modules/tasks/Makefile`
+**File:** `.packages/cpm-terraform-modules-monorepo/Makefile`
 
 ```makefile
 .PHONY: test
@@ -336,13 +285,9 @@ my-project/
 │   ├── manifest.xml         # Resolved manifest
 │   └── ...
 ├── .packages/
-│   ├── Makefile@            # Symlink → modules/modules/linkfiles/Makefile
-│   └── modules/             # cpm-terraform-modules-monorepo repo
-│       └── modules/
-│           ├── linkfiles/
-│           │   └── Makefile     # Wrapper: includes $(PACKAGES_DIR)/modules/tasks/Makefile
-│           └── tasks/
-│               └── Makefile     # Actual make targets
+│   └── cpm-terraform-modules-monorepo/  # Package repo
+│       ├── Makefile         # Make targets
+│       └── README.md
 ├── Makefile                 # User's root Makefile
 ├── .cpmenv                  # User's environment overrides
 └── (user's project files)
@@ -357,16 +302,10 @@ User runs: make test
     ↓
 1. Root Makefile (./Makefile)
    - Sets: PACKAGES_DIR = .packages
-   - Includes: .packages/Makefile
+   - Includes: .packages/*/Makefile (glob pattern)
+   - Expands to: .packages/cpm-terraform-modules-monorepo/Makefile
     ↓
-2. Symlink Resolution
-   - .packages/Makefile → .packages/modules/modules/linkfiles/Makefile
-    ↓
-3. Linkfiles Makefile (.packages/modules/modules/linkfiles/Makefile)
-   - Includes: $(PACKAGES_DIR)/modules/tasks/Makefile
-   - Expands to: .packages/modules/modules/tasks/Makefile
-    ↓
-4. Tasks Makefile (.packages/modules/modules/tasks/Makefile)
+2. Package Makefile (.packages/cpm-terraform-modules-monorepo/Makefile)
    - Executes: test target
    - Runs: tftest, go clean, etc.
 ```
@@ -377,7 +316,7 @@ User runs: make test
 
 ### Environment Variable Substitution
 
-The repo tool supports environment variable substitution in manifests:
+The Caylent fork of the repo tool supports environment variable substitution in manifests:
 
 ```xml
 <remote name="caylent-devops-platform" fetch="${GITBASE}"/>
@@ -385,16 +324,45 @@ The repo tool supports environment variable substitution in manifests:
 
 The `${GITBASE}` is replaced with the value from the environment (set in `.cpmenv`, exported by Makefile).
 
-### Linkfiles
+### Multi-Package Support
 
-Linkfiles create symlinks from the cloned repository to the workspace:
+The root Makefile uses a glob pattern to include all package Makefiles:
 
-```xml
-<linkfile src="modules/linkfiles/Makefile" dest=".packages/Makefile" />
+```makefile
+-include $(PACKAGES_DIR)/*/Makefile
 ```
 
-- `src` is relative to the cloned project path
-- `dest` is relative to workspace root
+This automatically includes Makefiles from all packages:
+- `.packages/cpm-terraform-modules-monorepo/Makefile`
+- `.packages/cpm-python-tools/Makefile`
+- `.packages/cpm-go-tools/Makefile`
+
+All targets from all packages become available without manual configuration.
+
+**Important for Package Developers:** When creating CPM package repositories that provide Make targets, the Makefile MUST be at the root of the package repository. This is required because:
+- The glob pattern `$(PACKAGES_DIR)/*/Makefile` expects Makefiles at `.packages/<package-name>/Makefile`
+- Nested Makefiles (e.g., `.packages/<package-name>/tasks/Makefile`) will not be automatically included
+- This keeps the architecture simple and predictable - one Makefile per package at a known location
+
+**Shared Make Includes:** Package developers can also provide `common.mk` or other `.mk` files at the package root for shared variables and functions:
+
+```
+cpm-terraform-modules-monorepo/
+├── Makefile       # Main targets (automatically included)
+├── common.mk      # Shared variables/functions
+└── README.md
+```
+
+The package Makefile can include these:
+
+```makefile
+# In .packages/cpm-terraform-modules-monorepo/Makefile
+include $(dir $(lastword $(MAKEFILE_LIST)))common.mk
+
+.PHONY: test
+test:
+	# Use variables from common.mk
+```
 
 ### Dual Repo Tool Installation
 
@@ -419,11 +387,11 @@ repo init --repo-rev="caylent-1.0.0" ...
 
 **How it works:**
 This is the standard repo tool architecture. The launcher script (first installation) is a minimal bootstrap that delegates to the full implementation (second installation) in `.repo/repo/`. This allows:
-- The repo tool to update itself per-project
-- Different projects to use different repo versions
-- The repo tool version to be tracked in the project's `.repo/` directory
+- Different projects to use different repo versions (each project has its own `.repo/repo/` installation)
+- The repo tool version to be pinned and version-controlled via `REPO_REV` in `.cpmenv`
+- Explicit version upgrades by updating `REPO_REV` and running `make cpm-configure`
 
-Both installations use the same `REPO_REV` version to ensure the launcher and implementation match.
+Both installations use the same `REPO_REV` version to ensure the launcher and implementation match. The repo tool version only changes when you explicitly update `REPO_REV` in `.cpmenv` or override it via environment variable.
 
 ### Variable Inheritance
 
@@ -437,10 +405,10 @@ PACKAGES_DIR = .packages
 ```makefile
 # Root Makefile loads .cpmenv
 include $(CPM_ENV_FILE)
--include $(PACKAGES_DIR)/Makefile
+-include $(PACKAGES_DIR)/*/Makefile
 
-# Linkfiles Makefile (included)
-include $(PACKAGES_DIR)/modules/tasks/Makefile  # PACKAGES_DIR is available here
+# Package Makefile (included)
+# PACKAGES_DIR is available here
 ```
 
 ---
@@ -452,7 +420,7 @@ CPM orchestrates dependency management through:
 1. **Manifest Repository** - Defines what to clone and where
 2. **Repo Tool** - Executes manifest instructions
 3. **Package Repositories** - Provide shared tooling
-4. **Symlinks** - Connect packages to workspace
+4. **Glob Pattern Includes** - Automatically include all package Makefiles
 5. **Make Variables** - Enable path resolution across includes
 
 This architecture enables:

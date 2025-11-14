@@ -5,7 +5,7 @@ from lxml import etree
 
 
 def validate_xml_files():
-    files = glob.glob("manifests/**/*.xml", recursive=True)
+    files = glob.glob("repo-specs/**/*.xml", recursive=True)
     errors = []
 
     for filepath in files:
