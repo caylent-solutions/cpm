@@ -2,6 +2,8 @@
 
 Guide for using CPM in CI/CD pipelines.
 
+**Note:** Examples use Caylent's public repositories. Replace URLs with your organization's repositories as needed.
+
 ---
 
 ## Overview
@@ -103,9 +105,12 @@ export PACKAGES_DIR=/tmp/.packages
 
 ### Git Configuration
 
-Use different Git organizations or mirrors:
+Point to your organization's repositories (public or private):
 
 ```bash
+export GITBASE=https://github.com/your-org/
+export REPO_MANIFESTS_URL=https://github.com/your-org/cpm.git
+# Or use private GitLab/Bitbucket/etc.
 export GITBASE=https://gitlab.internal.company.com/
 export REPO_MANIFESTS_URL=https://gitlab.internal.company.com/cpm.git
 ```
@@ -118,7 +123,7 @@ All variables in `.cpmenv` can be overridden. Key variables for pipelines:
 
 | Variable | Purpose | Example |
 |----------|---------|---------|
-| `REPO_MANIFESTS_REVISION` | CPM version/branch | `refs/tags/0.1.11` |
+| `REPO_MANIFESTS_REVISION` | CPM version/branch | `refs/tags/1.0.0` |
 | `REPO_REV` | repo tool version | `caylent-1.0.0` |
 | `PACKAGES_DIR` | Package sync location | `.packages` |
 
@@ -144,7 +149,7 @@ If a variable is missing from both sources, the build fails with a clear error.
 Commit `.cpmenv` with sensible defaults for developers:
 
 ```makefile
-REPO_MANIFESTS_REVISION ?= refs/tags/0.1.11
+REPO_MANIFESTS_REVISION ?= refs/tags/1.0.0
 PACKAGES_DIR ?= .packages
 ```
 
@@ -163,7 +168,7 @@ Add comments to `.cpmenv` indicating which variables pipelines typically overrid
 
 ```makefile
 # Commonly overridden in pipelines
-REPO_MANIFESTS_REVISION ?= refs/tags/0.1.11
+REPO_MANIFESTS_REVISION ?= refs/tags/1.0.0
 ```
 
 ### 4. Test Locally
@@ -224,14 +229,14 @@ REPO_REV ?= caylent-1.0.0
 
 ```yaml
 env:
-  REPO_MANIFESTS_REVISION: refs/tags/0.1.11-rc1
+  REPO_MANIFESTS_REVISION: refs/tags/1.0.0-rc1
 ```
 
 ### Production Pipeline
 
 ```yaml
 env:
-  REPO_MANIFESTS_REVISION: refs/tags/0.1.11
+  REPO_MANIFESTS_REVISION: refs/tags/1.0.0
 ```
 
 Same `.cpmenv` file, different behavior per environment.

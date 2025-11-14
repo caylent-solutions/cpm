@@ -2,11 +2,13 @@
 
 Complete walkthrough of CPM's internal process from project creation to running automation tasks.
 
+**Note:** This guide uses Caylent's repositories as examples. You can substitute your organization's repositories throughout by updating URLs in `.cpmenv`.
+
 ---
 
 ## Overview
 
-CPM uses the Caylent fork of the Gerrit `repo` tool to orchestrate dependency management across multiple Git repositories. This document explains every step of the process.
+CPM uses a fork of the Gerrit `repo` tool to orchestrate dependency management across multiple Git repositories. You can point CPM to any Git repositories—public, private, or within your organization. This document explains every step of the process using Caylent's public repositories as examples.
 
 ---
 
@@ -419,12 +421,12 @@ CPM orchestrates dependency management through:
 
 1. **Manifest Repository** - Defines what to clone and where
 2. **Repo Tool** - Executes manifest instructions
-3. **Package Repositories** - Provide shared tooling
+3. **Package Repositories** - Provide shared automation
 4. **Glob Pattern Includes** - Automatically include all package Makefiles
 5. **Make Variables** - Enable path resolution across includes
 
 This architecture enables:
-- Version-controlled tooling
+- Version-controlled automation
 - Consistent automation across projects
 - Single source of truth for dependencies
 - Easy updates via version tags

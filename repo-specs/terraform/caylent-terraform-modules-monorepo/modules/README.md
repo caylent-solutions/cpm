@@ -1,6 +1,8 @@
 # Terraform Modules Monorepo - CPM Manifest
 
-This manifest provides shared tooling for Terraform modules in the [Caylent terraform-modules monorepo](https://github.com/caylent-solutions/terraform-modules).
+This manifest provides shared automation for Terraform modules in the [Caylent terraform-modules monorepo](https://github.com/caylent-solutions/terraform-modules).
+
+**Reference Implementation:** This is Caylent's example manifest. You can use it as-is, or create your own manifest pointing to your organization's Terraform module repositories.
 
 ## Purpose
 
@@ -33,7 +35,7 @@ terraform-modules/
   - Security scanning
   - Dependency management
 
-**Note:** This only provides tooling for individual module subdirectories. The monorepo root Makefile remains in the terraform-modules repository and is not managed by CPM.
+**Note:** This only provides automation for individual module subdirectories. The monorepo root Makefile remains in the terraform-modules repository and is not managed by CPM.
 
 ## Package Repository Structure
 
@@ -82,9 +84,11 @@ REPO_MANIFESTS_PATH ?= repo-specs/terraform/caylent-terraform-modules-monorepo/m
 
 ## Related Manifests
 
-This is one of many CPM manifests for different development categories:
+Caylent provides reference manifests for different development categories:
 - `repo-specs/terraform/caylent-terraform-modules-monorepo/modules/` - This manifest (module subdirectories)
 - `repo-specs/python/` - Python projects (future)
 - `repo-specs/dotnet/` - .NET projects (future)
 - `repo-specs/java/` - Java projects (future)
 - `repo-specs/cdk/` - AWS CDK projects (future)
+
+**Create your own:** Follow the [Contributing Guide](../../../../docs/contributing.md) to create manifests for your organization's repositories.

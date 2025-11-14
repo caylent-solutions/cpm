@@ -1,16 +1,27 @@
 # Contributing to CPM
 
-Guide for contributing to the Caylent Package Manager.
+Guide for contributing to CPM and customizing it for your organization.
+
+## Open Source & Customizable
+
+CPM is open source and designed for any organization to use, customize, and extend:
+
+- **Use as-is:** Leverage Caylent's public manifests and packages
+- **Customize:** Fork CPM and point to your own repositories
+- **Extend:** Create your own manifests and packages for your organization
+- **Contribute back:** Share improvements that benefit the community
+
+What Caylent provides are mature reference implementations. You're free to use them, extend them, or create entirely custom solutions for your organization.
 
 ---
 
-## Overview
+## Contribution Areas
 
-CPM has three main contribution areas:
+CPM has three main areas for contribution and customization:
 
-1. **Creating Top-Level Manifests** - Define new package ecosystems (Terraform, Python, Java, etc.)
-2. **Creating Package Repositories** - Build shared tooling that manifests reference
-3. **Core CPM Development** - Improve the CPM framework itself
+1. **Creating Top-Level Manifests** - Define new package ecosystems for your organization (Terraform, Python, Java, etc.)
+2. **Creating Package Repositories** - Build shared automation that your manifests reference
+3. **Core CPM Development** - Improve the CPM framework itself and contribute back to the community
 
 ---
 
@@ -94,7 +105,7 @@ Must define these variables:
 ```bash
 # CPM Repository
 REPO_MANIFESTS_URL ?= https://github.com/caylent-solutions/cpm.git
-REPO_MANIFESTS_REVISION ?= refs/tags/0.1.11
+REPO_MANIFESTS_REVISION ?= refs/tags/1.0.0
 REPO_MANIFESTS_PATH ?= repo-specs/<path>/<to>/<manifest>/meta.xml
 
 # Repo Tool
@@ -223,7 +234,7 @@ task cpmConfigure {
 
 ## Creating Package Repositories
 
-Package repositories contain shared tooling that manifests reference.
+Package repositories contain shared automation that manifests reference.
 
 ### Repository Structure
 
@@ -251,7 +262,7 @@ Package repositories contain shared tooling that manifests reference.
 1. **Root-level task file** - For Make: Must be at repository root for glob pattern inclusion. For other runners: Follow that runner's conventions
 2. **No `help` target** (Make only) - Root Makefile provides generic help that discovers all targets
 3. **Shared includes** - Use `common.mk` (Make), shared modules (npm), or similar for shared variables/functions
-4. **Documentation** - Explain what tasks are provided and how to use them
+4. **Documentation** - Explain what automation tasks are provided and how to use them
 5. **Versioning** - Use semantic versioning tags
 
 ### Example Package Repository

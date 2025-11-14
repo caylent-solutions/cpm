@@ -6,6 +6,8 @@ Shared remote definitions used across all CPM manifests.
 
 Defines the Git remote configurations that all CPM manifests reference. This allows centralized management of Git organizations used for cloning package repositories.
 
+**Customization:** This example uses Caylent's public repositories. Create your own `remote.xml` pointing to your organization's Git repositories (GitHub, GitLab, Bitbucket, or self-hosted).
+
 ## Files
 
 - `remote.xml` - Defines remotes for Caylent GitHub organizations
@@ -43,8 +45,11 @@ Projects specify which remote to use:
 
 ## Adding Custom Remotes
 
-To add client or custom organization remotes, extend `remote.xml`:
+To add your organization's remotes, extend or replace `remote.xml`:
 
 ```xml
-<remote name="client-org" fetch="https://github.com/acme-corp/"/>
+<remote name="your-org" fetch="https://github.com/your-org/"/>
+<remote name="internal" fetch="https://gitlab.internal.company.com/"/>
 ```
+
+You can use any Git hosting provider: GitHub, GitLab, Bitbucket, Azure DevOps, or self-hosted Git servers.
